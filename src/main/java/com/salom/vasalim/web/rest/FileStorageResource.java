@@ -54,6 +54,6 @@ public class FileStorageResource {
     @DeleteMapping("/delete/{hashId}")
     public ResponseEntity delete(@PathVariable String hashId){
         fileStorageService.delete(hashId);
-        return ResponseEntity.ok("Fail ocirildi");
+        return ResponseEntity.ok("ocirildi");
     }
 }
