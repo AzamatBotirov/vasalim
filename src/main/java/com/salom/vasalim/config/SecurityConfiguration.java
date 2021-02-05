@@ -1,5 +1,7 @@
 package com.salom.vasalim.config;
 
+
+import com.salom.vasalim.security.JwtConfigurer;
 import com.salom.vasalim.security.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public AuthenticationManager authenticationManager()throws Exception{
-        return super.authenticationManager();
-    }
+
     private final UserDetailsService userDetailsService;
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -25,6 +24,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public SecurityConfiguration(@Lazy UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
         this.userDetailsService = userDetailsService;
         this.jwtTokenProvider = jwtTokenProvider;
+    }
+    @Bean
+    public AuthenticationManager authenticationManager()throws Exception{
+        return super.authenticationManager();
     }
 //
 //     @Override
@@ -49,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/student/all").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin();
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
 
 //    @Bean
