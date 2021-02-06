@@ -22,7 +22,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Boolean checkUserName(String userName) {
+    public Boolean checkUserName(String userName){
         return userRepository.existsByUserName(userName);
     }
 }

@@ -14,8 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
+public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
@@ -25,18 +24,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
+
     @Bean
-    public AuthenticationManager authenticationManager()throws Exception{
+    public AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
-//
-//     @Override
+
+//    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
 //        auth
 //               .userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 //    }
+
     @Override
-    protected  void configure(HttpSecurity http) throws Exception{
+    protected void configure(HttpSecurity http) throws Exception{
         http
                 .csrf()
                 .disable()
@@ -48,8 +49,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/api/employees").hasRole("ADMIN")
-                .antMatchers("/api/employees/*").hasAnyRole("AZAMAT","USER","ADMIN")
-                .antMatchers("/api/student/all").permitAll()
+                .antMatchers("/api/employees/*").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/students/all").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
@@ -59,4 +60,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    PasswordEncoder passwordEncoder(){
 //        return new BCryptPasswordEncoder();
 //    }
+
+
 }

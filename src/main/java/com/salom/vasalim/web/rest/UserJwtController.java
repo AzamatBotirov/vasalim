@@ -18,29 +18,31 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-class UserJwtController {
+public class UserJwtController {
+
     private final AuthenticationManager authenticationManager;
 
     private final JwtTokenProvider jwtTokenProvider;
 
     private final UserRepository userRepository;
 
-    UserJwtController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
+    public UserJwtController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRepository;
     }
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginVM loginVM){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginVM.getUsername(),loginVM.getPassword()));
-       User user =userRepository.findByLogin(loginVM.getUsername());
-       if(user==null){
-           throw new UsernameNotFoundException("Bu foydalanuvchi mavjud emas!");
-       }
-       String token = jwtTokenProvider.createToken(user.getUserName(),user.getRoles());
-       Map<Object, Object> map = new HashMap<>();
-       map.put("username", user.getUserName());
-       map.put("token", token);
-       return ResponseEntity.ok(map);
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword()));
+        User user = userRepository.findByLogin(loginVM.getUsername());
+        if (user == null){
+            throw new UsernameNotFoundException("Bu foydalanuvch mavjut emas");
+        }
+        String token = jwtTokenProvider.createToken(user.getUserName(), user.getRoles());
+        Map<Object, Object> map = new HashMap<>();
+        map.put("username", user.getUserName());
+        map.put("token", token);
+        return ResponseEntity.ok(map);
     }
 }
